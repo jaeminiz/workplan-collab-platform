@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 62%
+진행률: 70%
 
 ## 완료
 
@@ -15,22 +15,24 @@
 - 통합검색 UI와 `/api/search` 연결
 - POC 화면의 개인 이름 익명 처리
 - 업무 생성 dry-run UI와 `POST /api/tasks` 검증 API
+- Supabase Free 조직/프로젝트 생성
+- Vercel Production/Preview 환경변수 연결
+- Supabase 초기 migration 적용
+- 공개 Vercel 배포에서 Supabase 환경변수 인식 확인
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
 - Notion 스타일을 참고한 조용한 워크스페이스 UI 개선 및 브라우저 렌더링 확인
 
 ## 진행 중
 
-- Supabase 실제 프로젝트 연결
 - Google OAuth 로그인 연결
+- DB seed 데이터 입력
 - DB repository를 mock에서 Supabase로 전환
 - 업무 CRUD
 - 검색 UI를 `/api/search`와 연결
 
 ## 남은 작업
 
-- Supabase Free 프로젝트 생성 및 환경변수 연결
-- migration 적용
 - 로그인/세션 처리
 - 프로젝트/업무 생성, 수정, 상태 변경
 - 댓글/첨부파일
@@ -54,4 +56,8 @@ npm run dev
 http://127.0.0.1:3000
 ```
 
-외부에서 접근 가능한 POC 사이트는 Vercel 또는 다른 호스팅에 배포한 뒤 확정합니다.
+외부에서 접근 가능한 POC 사이트:
+
+```text
+https://workplan-collab-platform.vercel.app
+```

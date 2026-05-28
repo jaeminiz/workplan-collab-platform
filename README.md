@@ -66,4 +66,5 @@ npm run build
 - [Migration Strategy](docs/migration-strategy.md)
 - [ERP Integration Plan](docs/integrations-erp.md)
 - [Development Progress](docs/development-progress.md)
+- [Deployment Status](docs/deployment-status.md)
 - [Supabase Setup](supabase/README.md)
