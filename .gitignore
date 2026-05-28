@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# production
+build/
+dist/
+
+# env
+.env
+.env*.local
+!.env.example
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# local analysis artifacts
+outputs/
+chrome-test-profile*/
+chrome_test.*
+.playwright-mcp/
+build_workplan_*.py
+build_workplan_*.mjs
+render_word_pdf_preview.py
+dooray_training_links.html
+workplan_rebuild_analysis.md
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
