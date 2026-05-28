@@ -30,9 +30,18 @@ export default function LoginPage() {
               아직 설정되지 않았습니다.
             </div>
           ) : null}
-          <Button className="w-full" disabled={!isSupabaseConfigured}>
-            <Chrome className="mr-2 h-4 w-4" />
-            Google 계정으로 계속
+          <Button className="w-full" disabled={!isSupabaseConfigured} asChild={isSupabaseConfigured}>
+            {isSupabaseConfigured ? (
+              <Link href="/auth/sign-in">
+                <Chrome className="mr-2 h-4 w-4" />
+                Google 계정으로 계속
+              </Link>
+            ) : (
+              <>
+                <Chrome className="mr-2 h-4 w-4" />
+                Google 계정으로 계속
+              </>
+            )}
           </Button>
           <div className="rounded-md border border-stone-200 bg-white p-3 text-xs leading-5 text-stone-600">
             <div className="mb-1 flex items-center gap-2 font-medium text-stone-900">

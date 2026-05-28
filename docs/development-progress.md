@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 70%
+진행률: 73%
 
 ## 완료
 
@@ -19,13 +19,15 @@
 - Vercel Production/Preview 환경변수 연결
 - Supabase 초기 migration 적용
 - 공개 Vercel 배포에서 Supabase 환경변수 인식 확인
+- Supabase Auth Google 로그인 시작/콜백/로그아웃 라우트 추가
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
 - Notion 스타일을 참고한 조용한 워크스페이스 UI 개선 및 브라우저 렌더링 확인
 
 ## 진행 중
 
-- Google OAuth 로그인 연결
+- Supabase 콘솔 Google OAuth Provider 활성화
+- Google Cloud OAuth Client 생성
 - DB seed 데이터 입력
 - DB repository를 mock에서 Supabase로 전환
 - 업무 CRUD

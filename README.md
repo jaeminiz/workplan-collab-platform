@@ -67,4 +67,5 @@ npm run build
 - [ERP Integration Plan](docs/integrations-erp.md)
 - [Development Progress](docs/development-progress.md)
 - [Deployment Status](docs/deployment-status.md)
+- [Google OAuth Setup](docs/google-oauth-setup.md)
 - [Supabase Setup](supabase/README.md)
