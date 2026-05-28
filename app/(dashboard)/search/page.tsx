@@ -13,10 +13,11 @@ export default function SearchPage() {
       <SearchPanel />
       <Card>
         <CardHeader>
-          <CardTitle>검색 결과 빈 상태</CardTitle>
+          <CardTitle>검색 확장 계획</CardTitle>
         </CardHeader>
         <CardContent className="rounded-md border border-dashed border-stone-300 bg-stone-50 p-6 text-sm text-stone-500">
-          검색어를 입력하면 프로젝트, 업무, 댓글, 파일, 고객 결과를 유형별로 구분해 표시합니다.
+          현재는 프로젝트, 업무, 쪽지 mock API를 검색합니다. Supabase 연결 후 본문, 댓글, 파일명, 고객,
+          호선, ERP 동기화 데이터까지 검색 범위를 확장합니다.
         </CardContent>
       </Card>
     </div>
