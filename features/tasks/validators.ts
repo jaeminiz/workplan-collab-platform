@@ -13,3 +13,15 @@ export const createTaskSchema = z.object({
 });
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
+
+export const updateTaskStatusSchema = z.object({
+  status: z.enum(taskStatuses)
+});
+
+export type UpdateTaskStatusInput = z.infer<typeof updateTaskStatusSchema>;
+
+export const createTaskCommentSchema = z.object({
+  body: z.string().trim().min(2).max(2000)
+});
+
+export type CreateTaskCommentInput = z.infer<typeof createTaskCommentSchema>;

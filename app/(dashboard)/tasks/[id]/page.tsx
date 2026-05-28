@@ -4,9 +4,13 @@ import { ArrowLeft, CalendarDays, FileText, MessageSquare, UserRound } from "luc
 import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { TaskCommentPanel } from "@/components/task/task-comment-panel";
+import { TaskStatusControl } from "@/components/task/task-status-control";
 import { findProjectByCode } from "@/features/projects/repository";
 import { getTaskById } from "@/features/tasks/repository";
 import { findProjectByCodeFromSupabase, getTaskByIdFromSupabase } from "@/features/projects/supabase-repository";
+import { listMockTaskActivities, listMockTaskComments } from "@/features/tasks/comments";
+import { listTaskCommentsFromSupabase } from "@/features/tasks/supabase-comments";
 
 type TaskDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -21,6 +25,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   }
 
   const project = (await findProjectByCodeFromSupabase(task.projectCode)) ?? findProjectByCode(task.projectCode);
+  const comments = (await listTaskCommentsFromSupabase(task.id)) ?? listMockTaskComments(task.id);
+  const activities = listMockTaskActivities(task.id);
 
   return (
     <div className="space-y-6">
@@ -62,13 +68,25 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         </div>
       </section>
 
-      <section className="rounded-md border border-stone-200 bg-white p-4">
-        <h2 className="text-sm font-semibold text-stone-900">POC 상세 정보</h2>
-        <p className="mt-2 text-sm leading-6 text-stone-600">
-          이 화면은 기존 Workplan의 게시판형 업무를 대체하기 위한 상세 화면 초안입니다. 다음 단계에서 댓글,
-          첨부파일, 상태 변경, 담당자 변경, 이력 로그를 실제 데이터와 연결합니다.
-        </p>
-      </section>
+      <TaskStatusControl taskId={task.id} currentStatus={task.status} />
+
+      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+        <TaskCommentPanel taskId={task.id} comments={comments} />
+
+        <section className="rounded-md border border-stone-200 bg-white">
+          <div className="border-b border-stone-100 p-4">
+            <h2 className="text-sm font-semibold text-stone-900">활동 로그</h2>
+          </div>
+          <div className="divide-y divide-stone-100">
+            {activities.map((activity) => (
+              <div key={activity.id} className="p-4">
+                <p className="text-sm font-medium text-stone-900">{activity.title}</p>
+                <p className="mt-1 text-xs text-stone-500">{activity.createdAt}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

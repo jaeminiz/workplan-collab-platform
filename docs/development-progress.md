@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 88%
+진행률: 91%
 
 ## 완료
 
@@ -25,6 +25,9 @@
 - 로그인 사용자의 업무 생성 Supabase insert 전환
 - 프로젝트/업무 목록 클릭 가능한 상세 링크 연결
 - 프로젝트 상세 화면과 업무 상세 화면 초안 추가
+- 업무 상세 상태 변경 UI와 API 추가
+- 업무 상세 댓글 입력 UI와 API 추가
+- 업무 상세 활동 로그 초안 추가
 - Supabase seed 데이터 적용 및 row count 확인
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
@@ -35,6 +38,8 @@
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
 - 업무 CRUD
+- 첨부파일 업로드/다운로드
+- 실제 활동 로그 DB 조회
 - 검색 결과 상세 링크 정리
 
 ## 남은 작업

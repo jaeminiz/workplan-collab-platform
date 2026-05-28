@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { TaskSummary } from "@/types/domain";
 
-import type { CreateTaskInput } from "./validators";
+import type { CreateTaskCommentInput, CreateTaskInput, UpdateTaskStatusInput } from "./validators";
 
 type CustomerRecord = {
   id: string;
@@ -140,6 +140,91 @@ export async function createTaskInSupabase(input: CreateTaskInput) {
 
     return newProject as ProjectRecord;
   }
+}
+
+export async function updateTaskStatusInSupabase(taskId: string, input: UpdateTaskStatusInput) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      status: input.status,
+      completed_at: input.status === "완료확인" ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", taskId)
+    .select("id, status")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task status update failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "status.updated",
+    payload: { status: input.status }
+  });
+
+  return {
+    id: data.id as string,
+    status: data.status as TaskSummary["status"]
+  };
+}
+
+export async function createTaskCommentInSupabase(taskId: string, input: CreateTaskCommentInput) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("task_comments")
+    .insert({
+      task_id: taskId,
+      author_id: userData.user.id,
+      body: input.body
+    })
+    .select("id, body, created_at")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task comment insert failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "comment.created",
+    payload: { comment_id: data.id }
+  });
+
+  return {
+    id: data.id as string,
+    author: "익명 사용자",
+    body: data.body as string,
+    createdAt: String(data.created_at).slice(0, 16).replace("T", " ")
+  };
 }
 
 function isDelayed(dueDate: string | null, status: string) {
