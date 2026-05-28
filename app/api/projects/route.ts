@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 
 import { listProjects } from "@/features/projects/repository";
+import { listProjectsFromSupabase } from "@/features/projects/supabase-repository";
 
-export function GET() {
+export async function GET() {
+  const supabaseProjects = await listProjectsFromSupabase();
+
   return NextResponse.json({
-    data: listProjects()
+    data: supabaseProjects ?? listProjects(),
+    source: supabaseProjects ? "supabase" : "mock"
   });
 }

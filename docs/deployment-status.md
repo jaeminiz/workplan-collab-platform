@@ -37,6 +37,16 @@ https://alezurehpijkpdusjdsj.supabase.co
 - Automatically expose new tables 비활성화
 - Automatic RLS 활성화
 - 초기 migration 적용 완료
+- Seed 데이터 적용 완료
+
+Seed row count:
+
+```text
+customers: 5
+projects: 3
+tasks: 4
+task_comments: 2
+```
 
 ## 다음 작업
 

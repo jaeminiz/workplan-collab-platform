@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { listTasksFromSupabase } from "@/features/projects/supabase-repository";
 import { listTasks } from "@/features/tasks/repository";
 import { taskStatuses, taskTypes } from "@/features/tasks/constants";
 import { createTaskSchema } from "@/features/tasks/validators";
@@ -11,7 +12,7 @@ const taskQuerySchema = z.object({
   assignee: z.string().min(1).optional()
 });
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const parsedQuery = taskQuerySchema.safeParse({
     status: searchParams.get("status") || undefined,
@@ -29,8 +30,12 @@ export function GET(request: Request) {
     );
   }
 
+  const supabaseTasks = await listTasksFromSupabase();
+  const tasks = supabaseTasks ?? listTasks(parsedQuery.data);
+
   return NextResponse.json({
-    data: listTasks(parsedQuery.data)
+    data: tasks,
+    source: supabaseTasks ? "supabase" : "mock"
   });
 }
 
