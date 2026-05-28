@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 84%
+진행률: 88%
 
 ## 완료
 
@@ -23,6 +23,8 @@
 - Supabase seed SQL 준비
 - 로그인 사용자는 Supabase DB, 비로그인은 mock 데이터로 fallback하는 repository 구조 추가
 - 로그인 사용자의 업무 생성 Supabase insert 전환
+- 프로젝트/업무 목록 클릭 가능한 상세 링크 연결
+- 프로젝트 상세 화면과 업무 상세 화면 초안 추가
 - Supabase seed 데이터 적용 및 row count 확인
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
@@ -33,7 +35,7 @@
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
 - 업무 CRUD
-- 검색 UI를 `/api/search`와 연결
+- 검색 결과 상세 링크 정리
 
 ## 남은 작업
 

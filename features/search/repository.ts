@@ -34,7 +34,7 @@ export function searchWorkspace(query: string): SearchResult[] {
       type: "project",
       title: project.name,
       subtitle: `${project.customer} · ${project.code}`,
-      url: `/projects?project=${project.id}`
+      url: `/projects/${project.id}`
     }));
 
   const taskResults = taskSummaries
@@ -52,7 +52,7 @@ export function searchWorkspace(query: string): SearchResult[] {
       type: "task",
       title: task.title,
       subtitle: `${task.projectCode} · ${task.customer} · ${task.assignee}`,
-      url: `/tasks?task=${task.id}`
+      url: `/tasks/${task.id}`
     }));
 
   const inboxResults = inboxItems

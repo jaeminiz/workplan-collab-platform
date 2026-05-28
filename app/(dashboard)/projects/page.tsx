@@ -1,8 +1,11 @@
 import { ProjectTable } from "@/components/project/project-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { projectSummaries } from "@/features/projects/mock-data";
+import { listProjects } from "@/features/projects/repository";
+import { listProjectsFromSupabase } from "@/features/projects/supabase-repository";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = (await listProjectsFromSupabase()) ?? listProjects();
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +14,7 @@ export default function ProjectsPage() {
           프로젝트별 진행률, 지연 업무, 고객/호선 정보를 구조화해서 표시합니다.
         </p>
       </div>
-      <ProjectTable projects={projectSummaries} />
+      <ProjectTable projects={projects} />
       <Card>
         <CardHeader>
           <CardTitle>프로젝트 화면 탭 구성</CardTitle>

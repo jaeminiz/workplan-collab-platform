@@ -1,8 +1,11 @@
 import { KanbanPreview } from "@/components/task/kanban-preview";
 import { TaskCreateForm } from "@/components/task/task-create-form";
-import { taskSummaries } from "@/features/projects/mock-data";
+import { listTasksFromSupabase } from "@/features/projects/supabase-repository";
+import { listTasks } from "@/features/tasks/repository";
 
-export default function TasksPage() {
+export default async function TasksPage() {
+  const tasks = (await listTasksFromSupabase()) ?? listTasks();
+
   return (
     <div className="space-y-6">
       <div>
@@ -12,7 +15,7 @@ export default function TasksPage() {
         </p>
       </div>
       <TaskCreateForm />
-      <KanbanPreview tasks={taskSummaries} />
+      <KanbanPreview tasks={tasks} />
     </div>
   );
 }

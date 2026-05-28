@@ -8,6 +8,10 @@ export function getProjectById(id: string) {
   return projectSummaries.find((project) => project.id === id) ?? null;
 }
 
+export function findProjectByCode(code: string) {
+  return projectSummaries.find((project) => project.code.toLowerCase() === code.toLowerCase()) ?? null;
+}
+
 export function listProjectTasks(projectCode?: string) {
   if (!projectCode) {
     return taskSummaries;

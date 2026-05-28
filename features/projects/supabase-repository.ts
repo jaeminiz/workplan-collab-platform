@@ -83,6 +83,26 @@ export async function listProjectsFromSupabase() {
   });
 }
 
+export async function getProjectByIdFromSupabase(id: string) {
+  const projects = await listProjectsFromSupabase();
+
+  if (!projects) {
+    return null;
+  }
+
+  return projects.find((project) => project.id === id) ?? null;
+}
+
+export async function findProjectByCodeFromSupabase(code: string) {
+  const projects = await listProjectsFromSupabase();
+
+  if (!projects) {
+    return null;
+  }
+
+  return projects.find((project) => project.code.toLowerCase() === code.toLowerCase()) ?? null;
+}
+
 export async function listTasksFromSupabase() {
   const supabase = await createClient();
 
@@ -123,4 +143,14 @@ export async function listTasksFromSupabase() {
     isDelayed: isDelayed(task.due_date, task.status)
   };
   });
+}
+
+export async function getTaskByIdFromSupabase(id: string) {
+  const tasks = await listTasksFromSupabase();
+
+  if (!tasks) {
+    return null;
+  }
+
+  return tasks.find((task) => task.id === id) ?? null;
 }

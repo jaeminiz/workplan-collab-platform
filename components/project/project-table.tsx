@@ -1,3 +1,6 @@
+import Link from "next/link";
+import type { Route } from "next";
+
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import type { ProjectSummary } from "@/types/domain";
@@ -19,8 +22,9 @@ export function ProjectTable({ projects }: { projects: ProjectSummary[] }) {
         <span>납기</span>
       </div>
       {projects.map((project) => (
-        <div
+        <Link
           key={project.id}
+          href={`/projects/${project.id}` as Route}
           className="grid gap-3 border-b border-stone-100 px-4 py-3 last:border-b-0 hover:bg-stone-50/70 lg:grid-cols-[1.1fr_1fr_120px_110px_100px] lg:items-center lg:gap-4"
         >
           <div>
@@ -37,7 +41,7 @@ export function ProjectTable({ projects }: { projects: ProjectSummary[] }) {
           </div>
           <Badge variant={healthVariant[project.health]}>{project.health}</Badge>
           <p className="text-sm font-medium text-stone-700">{project.dueDate}</p>
-        </div>
+        </Link>
       ))}
     </div>
   );

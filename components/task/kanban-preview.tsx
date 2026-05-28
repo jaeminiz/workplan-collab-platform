@@ -1,22 +1,15 @@
+import Link from "next/link";
+import type { Route } from "next";
+
 import { Badge } from "@/components/ui/badge";
 import { kanbanColumns } from "@/features/tasks/constants";
 import type { TaskSummary } from "@/types/domain";
-
-const columnTaskMap: Record<string, string[]> = {
-  접수: ["task-1"],
-  검토중: ["task-2"],
-  설계중: ["task-3"],
-  "구매/자재": ["task-4"],
-  "품질/검사": [],
-  "출고/완료": [],
-  보류: []
-};
 
 export function KanbanPreview({ tasks }: { tasks: TaskSummary[] }) {
   return (
     <div className="grid gap-3 overflow-x-auto pb-2 md:grid-cols-2 xl:grid-cols-4">
       {kanbanColumns.map((column) => {
-        const cards = tasks.filter((task) => columnTaskMap[column]?.includes(task.id));
+        const cards = tasks.filter((task) => getTaskColumn(task) === column);
 
         return (
           <section key={column} className="min-h-64 rounded-md border border-stone-200 bg-stone-50/80">
@@ -31,7 +24,11 @@ export function KanbanPreview({ tasks }: { tasks: TaskSummary[] }) {
                 </p>
               ) : (
                 cards.map((task) => (
-                  <article key={task.id} className="rounded-md border border-stone-200 bg-white p-3 hover:bg-stone-50">
+                  <Link
+                    key={task.id}
+                    href={`/tasks/${task.id}` as Route}
+                    className="block rounded-md border border-stone-200 bg-white p-3 hover:bg-stone-50"
+                  >
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <Badge variant={task.isDelayed ? "destructive" : "outline"}>{task.status}</Badge>
                       <span className="text-xs text-stone-500">{task.dueDate}</span>
@@ -40,7 +37,7 @@ export function KanbanPreview({ tasks }: { tasks: TaskSummary[] }) {
                     <p className="mt-2 text-xs text-stone-500">
                       {task.customer} · {task.assignee} · 댓글 {task.comments} · 첨부 {task.files}
                     </p>
-                  </article>
+                  </Link>
                 ))
               )}
             </div>
@@ -49,4 +46,28 @@ export function KanbanPreview({ tasks }: { tasks: TaskSummary[] }) {
       })}
     </div>
   );
+}
+
+function getTaskColumn(task: TaskSummary) {
+  if (task.status === "보류" || task.status === "반려") {
+    return "보류";
+  }
+
+  if (task.status === "완료확인" || task.type === "출고완료" || task.type === "검사완료") {
+    return "출고/완료";
+  }
+
+  if (task.type === "자재증") {
+    return "구매/자재";
+  }
+
+  if (task.type === "설검" || task.type === "생요") {
+    return "설계중";
+  }
+
+  if (task.status === "검토요청" || task.status === "완료요청" || task.type === "CLAIM") {
+    return "검토중";
+  }
+
+  return "접수";
 }
