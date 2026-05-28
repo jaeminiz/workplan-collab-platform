@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { listTasksFromSupabase } from "@/features/projects/supabase-repository";
 import { listTasks } from "@/features/tasks/repository";
+import { createTaskInSupabase } from "@/features/tasks/supabase-mutations";
 import { taskStatuses, taskTypes } from "@/features/tasks/constants";
 import { createTaskSchema } from "@/features/tasks/validators";
 
@@ -53,6 +54,29 @@ export async function POST(request: Request) {
     );
   }
 
+  try {
+    const task = await createTaskInSupabase(parsedPayload.data);
+
+    if (task) {
+      return NextResponse.json(
+        {
+          mode: "supabase",
+          data: task,
+          message: "업무가 Supabase에 저장되었습니다."
+        },
+        { status: 201 }
+      );
+    }
+  } catch {
+    return NextResponse.json(
+      {
+        error: "Task insert failed",
+        message: "Supabase 업무 저장에 실패했습니다. DB 권한과 Google 로그인 세션을 확인하세요."
+      },
+      { status: 500 }
+    );
+  }
+
   return NextResponse.json(
     {
       mode: "poc-dry-run",
@@ -63,7 +87,7 @@ export async function POST(request: Request) {
         files: 0,
         isDelayed: false
       },
-      message: "Task payload validated. Supabase persistence will be enabled after DB setup."
+      message: "로그인 전이므로 저장하지 않고 입력값만 검증했습니다."
     },
     { status: 201 }
   );

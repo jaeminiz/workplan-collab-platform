@@ -8,6 +8,11 @@ import { Input } from "@/components/ui/input";
 import { taskStatuses, taskTypes } from "@/features/tasks/constants";
 import type { CreateTaskInput } from "@/features/tasks/validators";
 
+type CreateTaskResponse = {
+  mode: "supabase" | "poc-dry-run";
+  message: string;
+};
+
 async function createTask(payload: CreateTaskInput) {
   const response = await fetch("/api/tasks", {
     method: "POST",
@@ -21,7 +26,7 @@ async function createTask(payload: CreateTaskInput) {
     throw new Error("업무 생성 요청에 실패했습니다.");
   }
 
-  return response.json() as Promise<{ mode: string; message: string }>;
+  return response.json() as Promise<CreateTaskResponse>;
 }
 
 export function TaskCreateForm() {
@@ -54,7 +59,7 @@ export function TaskCreateForm() {
       <div className="border-b border-stone-100 p-4">
         <h2 className="text-sm font-semibold text-stone-900">업무 생성</h2>
         <p className="mt-1 text-sm text-stone-500">
-          현재는 POC 검증용 dry-run입니다. Supabase 연결 후 실제 저장으로 전환합니다.
+          로그인 전에는 입력값만 검증하고, Google 로그인 후에는 Supabase에 실제 저장합니다.
         </p>
       </div>
       <div className="grid gap-3 p-4 md:grid-cols-2">
@@ -109,10 +114,13 @@ export function TaskCreateForm() {
       </div>
       <div className="flex items-center justify-between border-t border-stone-100 p-4">
         <p className="text-sm text-stone-500">
-          {mutation.isSuccess ? "입력값 검증이 완료되었습니다." : "필수 정보를 입력해 dry-run으로 검증합니다."}
+          {mutation.isSuccess
+            ? mutation.data.message
+            : "필수 정보를 입력하면 로그인 상태에 따라 저장 또는 dry-run으로 처리합니다."}
+          {mutation.isError ? " 업무 생성 요청에 실패했습니다." : null}
         </p>
         <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "검증 중" : "업무 생성 검증"}
+          {mutation.isPending ? "처리 중" : "업무 생성"}
         </Button>
       </div>
     </form>

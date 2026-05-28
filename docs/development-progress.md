@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 80%
+진행률: 84%
 
 ## 완료
 
@@ -14,7 +14,7 @@
 - 프로젝트/업무/검색 mock API
 - 통합검색 UI와 `/api/search` 연결
 - POC 화면의 개인 이름 익명 처리
-- 업무 생성 dry-run UI와 `POST /api/tasks` 검증 API
+- 업무 생성 UI와 `POST /api/tasks` 검증 API
 - Supabase Free 조직/프로젝트 생성
 - Vercel Production/Preview 환경변수 연결
 - Supabase 초기 migration 적용
@@ -22,6 +22,7 @@
 - Supabase Auth Google 로그인 시작/콜백/로그아웃 라우트 추가
 - Supabase seed SQL 준비
 - 로그인 사용자는 Supabase DB, 비로그인은 mock 데이터로 fallback하는 repository 구조 추가
+- 로그인 사용자의 업무 생성 Supabase insert 전환
 - Supabase seed 데이터 적용 및 row count 확인
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
@@ -31,7 +32,6 @@
 
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
-- 업무 생성 실제 insert 전환
 - 업무 CRUD
 - 검색 UI를 `/api/search`와 연결
 
