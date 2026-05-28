@@ -1,6 +1,6 @@
 import type { TaskStatus, TaskType } from "@/types/domain";
 
-export const taskTypes: TaskType[] = [
+export const taskTypes = [
   "작요",
   "생요",
   "설검",
@@ -12,9 +12,9 @@ export const taskTypes: TaskType[] = [
   "CLAIM",
   "SPARE",
   "일반업무"
-];
+] as const satisfies readonly TaskType[];
 
-export const taskStatuses: TaskStatus[] = [
+export const taskStatuses = [
   "미착수",
   "진행중",
   "검토요청",
@@ -22,7 +22,7 @@ export const taskStatuses: TaskStatus[] = [
   "완료확인",
   "반려",
   "보류"
-];
+] as const satisfies readonly TaskStatus[];
 
 export const kanbanColumns = [
   "접수",

@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Users className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-extrabold">Marsen Work OS</p>
+            <p className="text-sm font-extrabold">MiniPark Work OS</p>
             <p className="text-xs text-slate-500">Search-first collaboration</p>
           </div>
         </div>

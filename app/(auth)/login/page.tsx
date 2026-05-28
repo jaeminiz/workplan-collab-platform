@@ -19,7 +19,7 @@ export default function LoginPage() {
           </div>
           <CardTitle className="text-2xl">Google Workspace 로그인</CardTitle>
           <p className="text-sm leading-6 text-slate-600">
-            Marsen Work OS는 Google OAuth를 기본 인증으로 사용합니다. Supabase 환경변수를
+            MiniPark Work OS는 Google OAuth를 기본 인증으로 사용합니다. Supabase 환경변수를
             연결하면 실제 로그인 플로우를 활성화할 수 있습니다.
           </p>
         </CardHeader>

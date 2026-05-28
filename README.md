@@ -1,4 +1,4 @@
-# Marsen Work OS
+# MiniPark Work OS
 
 Workplan의 프로젝트, 업무, 쪽지, 문서, 웹디스크, 고객관리 흐름을 유지하면서 검색 중심 SaaS형 협업 플랫폼으로 재설계하는 초기 Next.js 앱입니다.
 
