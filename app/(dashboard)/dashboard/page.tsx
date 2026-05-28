@@ -11,8 +11,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-950">개인 대시보드</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-3xl font-semibold text-stone-950">개인 대시보드</h1>
+        <p className="mt-2 text-sm text-stone-500">
           전체 게시판을 한 번에 불러오지 않고, 오늘 처리해야 하는 업무와 알림만 먼저 보여줍니다.
         </p>
       </div>
@@ -28,14 +28,14 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           {taskSummaries.map((task) => (
-            <div key={task.id} className="flex flex-col gap-2 rounded-md border border-slate-200 p-3 md:flex-row md:items-center md:justify-between">
+            <div key={task.id} className="flex flex-col gap-2 rounded-md border border-stone-200 p-3 hover:bg-stone-50 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="font-bold text-slate-950">{task.title}</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-medium text-stone-950">{task.title}</p>
+                <p className="text-sm text-stone-500">
                   {task.projectCode} · {task.customer} · {task.assignee}
                 </p>
               </div>
-              <p className="text-sm font-semibold text-slate-700">{task.dueDate}</p>
+              <p className="text-sm font-medium text-stone-700">{task.dueDate}</p>
             </div>
           ))}
         </CardContent>
