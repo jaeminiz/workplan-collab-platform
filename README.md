@@ -64,4 +64,6 @@ npm run build
 - [Architecture](docs/architecture.md)
 - [Feature Specification](docs/feature-spec.md)
 - [Migration Strategy](docs/migration-strategy.md)
+- [ERP Integration Plan](docs/integrations-erp.md)
+- [Development Progress](docs/development-progress.md)
 - [Supabase Setup](supabase/README.md)

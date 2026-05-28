@@ -170,6 +170,37 @@ create table public.integration_accounts (
   unique (provider, external_id)
 );
 
+create table public.integration_mappings (
+  id uuid primary key default gen_random_uuid(),
+  provider text not null,
+  erp_system text,
+  entity_type text not null,
+  local_entity text not null,
+  external_entity text not null,
+  local_id uuid,
+  external_id text,
+  sync_direction text not null default 'pull',
+  enabled boolean not null default true,
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table public.integration_events (
+  id uuid primary key default gen_random_uuid(),
+  provider text not null,
+  event_type text not null,
+  entity_type text,
+  local_id uuid,
+  external_id text,
+  direction text not null default 'inbound',
+  status text not null default 'pending',
+  payload jsonb not null default '{}'::jsonb,
+  error_message text,
+  processed_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
 create table public.audit_logs (
   id uuid primary key default gen_random_uuid(),
   actor_id uuid references public.profiles(id) on delete set null,
@@ -202,6 +233,17 @@ create index documents_task_id_idx on public.documents (task_id);
 create index documents_search_idx on public.documents using gin (search_vector);
 create index notifications_recipient_id_idx on public.notifications (recipient_id);
 create index notifications_read_at_idx on public.notifications (read_at);
+create index integration_mappings_provider_idx on public.integration_mappings (provider);
+create index integration_mappings_external_id_idx on public.integration_mappings (external_id);
+create unique index integration_mappings_unique_idx on public.integration_mappings (
+  provider,
+  entity_type,
+  local_entity,
+  external_entity,
+  coalesce(external_id, '')
+);
+create index integration_events_provider_status_idx on public.integration_events (provider, status);
+create index integration_events_external_id_idx on public.integration_events (external_id);
 
 alter table public.departments enable row level security;
 alter table public.profiles enable row level security;
@@ -215,6 +257,8 @@ alter table public.documents enable row level security;
 alter table public.task_files enable row level security;
 alter table public.notifications enable row level security;
 alter table public.integration_accounts enable row level security;
+alter table public.integration_mappings enable row level security;
+alter table public.integration_events enable row level security;
 alter table public.audit_logs enable row level security;
 
 create policy "authenticated users can read departments" on public.departments
@@ -275,6 +319,16 @@ create policy "users can read own integrations" on public.integration_accounts
   for select to authenticated using (profile_id = auth.uid());
 create policy "users can write own integrations" on public.integration_accounts
   for all to authenticated using (profile_id = auth.uid()) with check (profile_id = auth.uid());
+
+create policy "authenticated users can read integration mappings" on public.integration_mappings
+  for select to authenticated using (true);
+create policy "authenticated users can write integration mappings" on public.integration_mappings
+  for all to authenticated using (true) with check (true);
+
+create policy "authenticated users can read integration events" on public.integration_events
+  for select to authenticated using (true);
+create policy "authenticated users can create integration events" on public.integration_events
+  for insert to authenticated with check (true);
 
 create policy "authenticated users can read audit logs" on public.audit_logs
   for select to authenticated using (true);

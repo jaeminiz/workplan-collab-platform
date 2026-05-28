@@ -60,3 +60,42 @@ export interface InboxItem {
   completed: boolean;
   createdAt: string;
 }
+
+export type IntegrationProvider =
+  | "google"
+  | "gmail"
+  | "gemini"
+  | "slack"
+  | "telegram"
+  | "kakao"
+  | "erp"
+  | "custom";
+
+export type IntegrationStatus = "not_configured" | "ready" | "error" | "disabled";
+
+export type ErpEntityType =
+  | "customer"
+  | "project"
+  | "task"
+  | "purchase_order"
+  | "invoice"
+  | "inventory_item"
+  | "shipment";
+
+export interface IntegrationSummary {
+  provider: IntegrationProvider;
+  name: string;
+  status: IntegrationStatus;
+  description: string;
+  requiredSecrets: string[];
+}
+
+export interface ErpMapping {
+  id: string;
+  erpSystem: string;
+  entityType: ErpEntityType;
+  localEntity: string;
+  externalEntity: string;
+  syncDirection: "pull" | "push" | "bidirectional";
+  enabled: boolean;
+}
