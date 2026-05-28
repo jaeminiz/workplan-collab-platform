@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 55%
+진행률: 62%
 
 ## 완료
 
@@ -13,6 +13,8 @@
 - Supabase Free POC 기준 DB migration 초안
 - 프로젝트/업무/검색 mock API
 - 통합검색 UI와 `/api/search` 연결
+- POC 화면의 개인 이름 익명 처리
+- 업무 생성 dry-run UI와 `POST /api/tasks` 검증 API
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
 - Notion 스타일을 참고한 조용한 워크스페이스 UI 개선 및 브라우저 렌더링 확인

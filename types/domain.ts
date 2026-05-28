@@ -51,6 +51,16 @@ export interface TaskSummary {
   isDelayed: boolean;
 }
 
+export type NewTaskInput = {
+  title: string;
+  projectCode: string;
+  customer: string;
+  type: TaskType;
+  status: TaskStatus;
+  assignee: string;
+  dueDate: string;
+};
+
 export interface InboxItem {
   id: string;
   title: string;

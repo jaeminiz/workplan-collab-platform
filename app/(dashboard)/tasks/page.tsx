@@ -1,4 +1,5 @@
 import { KanbanPreview } from "@/components/task/kanban-preview";
+import { TaskCreateForm } from "@/components/task/task-create-form";
 import { taskSummaries } from "@/features/projects/mock-data";
 
 export default function TasksPage() {
@@ -10,6 +11,7 @@ export default function TasksPage() {
           Workplan의 업무명을 구조화 필드로 분리하고, 상태와 흐름을 칸반으로 확인합니다.
         </p>
       </div>
+      <TaskCreateForm />
       <KanbanPreview tasks={taskSummaries} />
     </div>
   );
