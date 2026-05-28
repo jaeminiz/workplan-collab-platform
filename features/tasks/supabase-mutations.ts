@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { TaskSummary } from "@/types/domain";
 
-import type { CreateTaskCommentInput, CreateTaskInput, UpdateTaskStatusInput } from "./validators";
+import type { CreateTaskCommentInput, CreateTaskInput, UpdateTaskBodyInput, UpdateTaskStatusInput } from "./validators";
 
 type CustomerRecord = {
   id: string;
@@ -181,6 +181,47 @@ export async function updateTaskStatusInSupabase(taskId: string, input: UpdateTa
   return {
     id: data.id as string,
     status: data.status as TaskSummary["status"]
+  };
+}
+
+export async function updateTaskBodyInSupabase(taskId: string, input: UpdateTaskBodyInput) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      body: input.body,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", taskId)
+    .select("id, body")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task body update failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "body.updated",
+    payload: { body_length: input.body.length }
+  });
+
+  return {
+    id: data.id as string,
+    body: data.body as string
   };
 }
 

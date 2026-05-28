@@ -20,6 +20,23 @@ export const updateTaskStatusSchema = z.object({
 
 export type UpdateTaskStatusInput = z.infer<typeof updateTaskStatusSchema>;
 
+export const updateTaskBodySchema = z.object({
+  body: z.string().trim().min(2).max(10000)
+});
+
+export type UpdateTaskBodyInput = z.infer<typeof updateTaskBodySchema>;
+
+export const updateTaskSchema = z
+  .object({
+    status: z.enum(taskStatuses).optional(),
+    body: z.string().trim().min(2).max(10000).optional()
+  })
+  .refine((value) => value.status || value.body, {
+    message: "status 또는 body 중 하나는 필요합니다."
+  });
+
+export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+
 export const createTaskCommentSchema = z.object({
   body: z.string().trim().min(2).max(2000)
 });

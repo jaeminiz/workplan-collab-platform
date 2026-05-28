@@ -48,6 +48,7 @@ export const taskSummaries: TaskSummary[] = [
   {
     id: "task-1",
     title: "260527_작요_PMF_POSSM_SUPER HERO_싱가폴 연차검사",
+    body: "싱가폴 연차검사 관련 작요 접수 건입니다. 검사 일정, 필요 자재, 선주 요청사항을 확인하고 설계/품질 부서와 후속 일정을 조율합니다.",
     projectCode: "SUPER HERO",
     customer: "POSSM",
     type: "작요",
@@ -61,6 +62,7 @@ export const taskSummaries: TaskSummary[] = [
   {
     id: "task-2",
     title: "260508_CLAIM접수_대선조선_PEGASUS HOPE_TLGS",
+    body: "CLAIM 접수 건입니다. 현장 증상, 선박 정보, 관련 도면 및 이전 처리 이력을 확인한 뒤 원인 분석과 회신 일정을 관리합니다.",
     projectCode: "SB660",
     customer: "대선조선",
     type: "CLAIM",
@@ -74,6 +76,7 @@ export const taskSummaries: TaskSummary[] = [
   {
     id: "task-3",
     title: "260527_생요_EH ENG_BAL SPARE_PAFR 60",
+    body: "BAL SPARE 관련 생산 요청 업무입니다. 품목, 납기, 구매 필요 여부를 확인하고 출고 전 검사 상태를 추적합니다.",
     projectCode: "EH 26032436J",
     customer: "EH ENG",
     type: "생요",
@@ -87,6 +90,7 @@ export const taskSummaries: TaskSummary[] = [
   {
     id: "task-4",
     title: "260527_자재증_HD HMS_KOHAKU_H3277_BAL CLAIM",
+    body: "자재 증빙 및 CLAIM 대응 업무입니다. 공급 이력, 검사 결과, 고객 요청 문서를 함께 확인해야 합니다.",
     projectCode: "H3277",
     customer: "HD HMS",
     type: "자재증",

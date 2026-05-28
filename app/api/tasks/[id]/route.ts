@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { updateTaskStatusInSupabase } from "@/features/tasks/supabase-mutations";
-import { updateTaskStatusSchema } from "@/features/tasks/validators";
+import { updateTaskBodyInSupabase, updateTaskStatusInSupabase } from "@/features/tasks/supabase-mutations";
+import { updateTaskSchema } from "@/features/tasks/validators";
 
 type TaskRouteContext = {
   params: Promise<{ id: string }>;
@@ -10,12 +10,12 @@ type TaskRouteContext = {
 export async function PATCH(request: Request, context: TaskRouteContext) {
   const { id } = await context.params;
   const payload = await request.json().catch(() => null);
-  const parsedPayload = updateTaskStatusSchema.safeParse(payload);
+  const parsedPayload = updateTaskSchema.safeParse(payload);
 
   if (!parsedPayload.success) {
     return NextResponse.json(
       {
-        error: "Invalid task status payload",
+        error: "Invalid task payload",
         issues: parsedPayload.error.flatten().fieldErrors
       },
       { status: 400 }
@@ -23,14 +23,28 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
   }
 
   try {
-    const updatedTask = await updateTaskStatusInSupabase(id, parsedPayload.data);
+    if (parsedPayload.data.status) {
+      const updatedTask = await updateTaskStatusInSupabase(id, { status: parsedPayload.data.status });
 
-    if (updatedTask) {
-      return NextResponse.json({
-        mode: "supabase",
-        data: updatedTask,
-        message: "업무 상태가 Supabase에 저장되었습니다."
-      });
+      if (updatedTask) {
+        return NextResponse.json({
+          mode: "supabase",
+          data: updatedTask,
+          message: "업무 상태가 Supabase에 저장되었습니다."
+        });
+      }
+    }
+
+    if (parsedPayload.data.body) {
+      const updatedTask = await updateTaskBodyInSupabase(id, { body: parsedPayload.data.body });
+
+      if (updatedTask) {
+        return NextResponse.json({
+          mode: "supabase",
+          data: updatedTask,
+          message: "업무 내용이 Supabase에 저장되었습니다."
+        });
+      }
     }
   } catch {
     return NextResponse.json(
@@ -46,8 +60,10 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
     mode: "poc-dry-run",
     data: {
       id,
-      status: parsedPayload.data.status
+      ...parsedPayload.data
     },
-    message: "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
+    message: parsedPayload.data.body
+      ? "로그인 전이므로 업무 내용은 저장하지 않고 입력 흐름만 검증했습니다."
+      : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
   });
 }

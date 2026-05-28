@@ -4,6 +4,7 @@ import { ArrowLeft, CalendarDays, FileText, MessageSquare, UserRound } from "luc
 import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { TaskBodyEditor } from "@/components/task/task-body-editor";
 import { TaskCommentPanel } from "@/components/task/task-comment-panel";
 import { TaskStatusControl } from "@/components/task/task-status-control";
 import { findProjectByCode } from "@/features/projects/repository";
@@ -53,6 +54,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         <Info icon={MessageSquare} label="댓글" value={`${task.comments}건`} />
         <Info icon={FileText} label="첨부" value={`${task.files}건`} />
       </div>
+
+      <TaskBodyEditor taskId={task.id} initialBody={task.body} />
 
       <section className="rounded-md border border-stone-200 bg-white">
         <div className="border-b border-stone-100 p-4">

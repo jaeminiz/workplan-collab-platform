@@ -16,6 +16,7 @@ type ProjectRow = {
 type TaskRow = {
   id: string;
   title: string;
+  body: string | null;
   type: TaskSummary["type"];
   status: TaskSummary["status"];
   due_date: string | null;
@@ -118,7 +119,7 @@ export async function listTasksFromSupabase() {
 
   const { data, error } = await supabase
     .from("tasks")
-    .select("id, title, type, status, due_date, projects(code), customers(name), task_comments(id), task_files(document_id)")
+    .select("id, title, body, type, status, due_date, projects(code), customers(name), task_comments(id), task_files(document_id)")
     .order("updated_at", { ascending: false });
 
   if (error || !data) {
@@ -132,6 +133,7 @@ export async function listTasksFromSupabase() {
     return {
     id: task.id,
     title: task.title,
+    body: task.body ?? undefined,
     projectCode: project?.code ?? "미지정",
     customer: customer?.name ?? "미지정 고객",
     type: task.type,

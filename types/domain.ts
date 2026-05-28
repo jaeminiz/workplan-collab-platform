@@ -40,6 +40,7 @@ export interface ProjectSummary {
 export interface TaskSummary {
   id: string;
   title: string;
+  body?: string;
   projectCode: string;
   customer: string;
   type: TaskType;
