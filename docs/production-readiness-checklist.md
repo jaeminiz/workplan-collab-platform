@@ -22,16 +22,10 @@ supabase/migrations/0004_task_archive.sql
 적용 후 확인:
 
 ```sql
-select column_name
-from information_schema.columns
-where table_schema = 'public'
-  and table_name = 'tasks'
-  and column_name in ('archived_at', 'archived_by', 'assignee_id');
-
-select id, name, public, file_size_limit
-from storage.buckets
-where id = 'work-files';
+\i supabase/verification.sql
 ```
+
+Supabase SQL Editor를 사용할 때는 `supabase/verification.sql`의 내용을 붙여넣어 실행한다.
 
 완료 기준:
 
@@ -103,6 +97,24 @@ https://workplan-collab-platform.vercel.app/login
 https://workplan-collab-platform.vercel.app/dashboard
 https://workplan-collab-platform.vercel.app/tasks
 https://workplan-collab-platform.vercel.app/search
+```
+
+자동 확인:
+
+```powershell
+.\scripts\smoke-test.ps1
+```
+
+Preview 또는 다른 URL 확인:
+
+```powershell
+.\scripts\smoke-test.ps1 -BaseUrl "https://your-preview-url.vercel.app"
+```
+
+로컬에서 Supabase 환경변수 없이 화면 응답만 확인:
+
+```powershell
+.\scripts\smoke-test.ps1 -BaseUrl "http://localhost:3002" -AllowUnconfiguredSupabase
 ```
 
 로그인 후 확인할 업무 흐름:

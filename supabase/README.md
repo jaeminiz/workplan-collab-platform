@@ -14,6 +14,12 @@
 
 자세한 운영 적용 순서는 `docs/production-readiness-checklist.md`를 따릅니다.
 
+적용 후 검증:
+
+```text
+supabase/verification.sql
+```
+
 ## 초기 보안 원칙
 
 - 모든 업무 데이터 테이블은 RLS를 활성화합니다.

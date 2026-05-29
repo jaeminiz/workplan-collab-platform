@@ -52,6 +52,8 @@
 - 업무 상세 담당자 배정 UI와 Supabase `assignee_id` 저장 API 추가
 - 운영 적용용 production readiness 체크리스트 문서 추가
 - 설정 화면과 health API에 OAuth, migration, 앱 URL 점검 정보 추가
+- 공개 POC smoke test PowerShell 스크립트 추가
+- Supabase 운영 migration 적용 검증 SQL 추가
 
 ## 진행 중
 
