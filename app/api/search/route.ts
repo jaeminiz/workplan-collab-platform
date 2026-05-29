@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { searchWorkspace } from "@/features/search/repository";
+import { searchWorkspace, searchWorkspaceFromSupabase } from "@/features/search/repository";
 
 const searchQuerySchema = z.object({
   q: z.string().trim().min(1).max(100)
 });
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const parsedQuery = searchQuerySchema.safeParse({
     q: searchParams.get("q") ?? ""
@@ -23,7 +23,10 @@ export function GET(request: Request) {
     );
   }
 
+  const supabaseResults = await searchWorkspaceFromSupabase(parsedQuery.data.q);
+
   return NextResponse.json({
-    data: searchWorkspace(parsedQuery.data.q)
+    data: supabaseResults ?? searchWorkspace(parsedQuery.data.q),
+    source: supabaseResults ? "supabase" : "mock"
   });
 }

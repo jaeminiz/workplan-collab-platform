@@ -12,6 +12,7 @@ import { findProjectByCode } from "@/features/projects/repository";
 import { getTaskById } from "@/features/tasks/repository";
 import { findProjectByCodeFromSupabase, getTaskByIdFromSupabase } from "@/features/projects/supabase-repository";
 import { listMockTaskActivities, listMockTaskComments } from "@/features/tasks/comments";
+import { listTaskActivitiesFromSupabase } from "@/features/tasks/supabase-activities";
 import { listTaskCommentsFromSupabase } from "@/features/tasks/supabase-comments";
 
 type TaskDetailPageProps = {
@@ -28,7 +29,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
 
   const project = (await findProjectByCodeFromSupabase(task.projectCode)) ?? findProjectByCode(task.projectCode);
   const comments = (await listTaskCommentsFromSupabase(task.id)) ?? listMockTaskComments(task.id);
-  const activities = listMockTaskActivities(task.id);
+  const activities = (await listTaskActivitiesFromSupabase(task.id)) ?? listMockTaskActivities(task.id);
 
   return (
     <div className="space-y-6">
