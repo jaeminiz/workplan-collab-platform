@@ -39,6 +39,22 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 GOOGLE_WORKSPACE_DOMAIN=
 ```
 
+## Two-PC Sync Workflow
+
+작업을 시작하기 전에는 최신 원격 상태를 먼저 받습니다.
+
+```powershell
+.\scripts\sync-start.ps1
+```
+
+작업을 마친 뒤에는 커밋 메시지를 지정해 커밋과 push를 한 번에 처리합니다.
+
+```powershell
+.\scripts\sync-finish.ps1 "작업 내용 요약"
+```
+
+다른 PC에서는 다시 `sync-start.ps1`을 실행하면 GitHub에 올라간 최신 작업을 이어받을 수 있습니다. 데스크탑 또는 노트북에서 commit만 하고 push하지 않은 작업은 다른 PC에서 받을 수 없습니다.
+
 ## Initial Screens
 
 - `/login`: Google Workspace OAuth 로그인 준비 화면
