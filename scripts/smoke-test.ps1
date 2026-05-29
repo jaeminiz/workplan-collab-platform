@@ -52,6 +52,10 @@ try {
   if (-not $health.supabaseConfigured -and -not $AllowUnconfiguredSupabase) {
     $failures += "Supabase environment is not configured"
   }
+
+  if (-not $health.appUrl) {
+    $failures += "App URL is not reported by health check"
+  }
 } catch {
   $failures += "Health JSON check failed"
 }
