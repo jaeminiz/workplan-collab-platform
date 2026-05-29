@@ -339,6 +339,50 @@ export async function createTaskCommentInSupabase(taskId: string, input: CreateT
   };
 }
 
+export async function archiveTaskInSupabase(taskId: string) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const archivedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      archived_at: archivedAt,
+      archived_by: userData.user.id,
+      updated_at: archivedAt
+    })
+    .eq("id", taskId)
+    .is("archived_at", null)
+    .select("id, archived_at")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task archive failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "task.archived",
+    payload: { archived_at: archivedAt }
+  });
+
+  return {
+    id: data.id as string,
+    archivedAt: data.archived_at as string
+  };
+}
+
 function isDelayed(dueDate: string | null, status: string) {
   return Boolean(dueDate && status !== "완료확인" && new Date(dueDate) < new Date());
 }

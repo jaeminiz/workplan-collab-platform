@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import {
+  archiveTaskInSupabase,
   updateTaskBodyInSupabase,
   updateTaskMetadataInSupabase,
   updateTaskStatusInSupabase
@@ -87,5 +88,38 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
       : parsedPayload.data.title || parsedPayload.data.type || parsedPayload.data.dueDate
         ? "로그인 전이므로 업무 기본 정보는 저장하지 않고 입력 흐름만 검증했습니다."
         : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
+  });
+}
+
+export async function DELETE(_request: Request, context: TaskRouteContext) {
+  const { id } = await context.params;
+
+  try {
+    const archivedTask = await archiveTaskInSupabase(id);
+
+    if (archivedTask) {
+      return NextResponse.json({
+        mode: "supabase",
+        data: archivedTask,
+        message: "업무가 보관 처리되었습니다."
+      });
+    }
+  } catch {
+    return NextResponse.json(
+      {
+        error: "Task archive failed",
+        message: "업무 보관에 실패했습니다. DB 권한과 로그인 세션을 확인하세요."
+      },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({
+    mode: "poc-dry-run",
+    data: {
+      id,
+      archivedAt: new Date().toISOString()
+    },
+    message: "로그인 전이므로 업무는 보관하지 않고 흐름만 검증했습니다."
   });
 }

@@ -72,6 +72,10 @@ function formatActivityTitle(action: string, payload: Record<string, unknown> | 
     return `${actor}님이 첨부파일 ${formatPayloadValue(payload?.title)}을 추가`;
   }
 
+  if (action === "task.archived") {
+    return `${actor}님이 업무를 보관 처리`;
+  }
+
   return `${actor}님이 ${action} 작업 수행`;
 }
 

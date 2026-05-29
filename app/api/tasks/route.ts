@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const supabaseTasks = await listTasksFromSupabase();
+  const supabaseTasks = await listTasksFromSupabase(parsedQuery.data);
   const tasks = supabaseTasks ?? listTasks(parsedQuery.data);
 
   return NextResponse.json({

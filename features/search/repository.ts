@@ -182,6 +182,7 @@ export async function searchWorkspaceFromSupabase(query: string) {
     const { data, error } = await client
       .from("tasks")
       .select("id, title, projects(code), customers(name)")
+      .is("archived_at", null)
       .textSearch("search_vector", searchQuery, { config: "simple", type: "websearch" })
       .limit(10);
 

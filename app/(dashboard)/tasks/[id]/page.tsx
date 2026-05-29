@@ -4,6 +4,7 @@ import { ArrowLeft, CalendarDays, FileText, MessageSquare, UserRound } from "luc
 import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { TaskArchiveControl } from "@/components/task/task-archive-control";
 import { TaskBodyEditor } from "@/components/task/task-body-editor";
 import { TaskCommentPanel } from "@/components/task/task-comment-panel";
 import { TaskFilePanel } from "@/components/task/task-file-panel";
@@ -82,6 +83,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       <TaskStatusControl taskId={task.id} currentStatus={task.status} />
 
       <TaskFilePanel taskId={task.id} files={files} />
+
+      <TaskArchiveControl taskId={task.id} />
 
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <TaskCommentPanel taskId={task.id} comments={comments} />

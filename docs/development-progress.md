@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 97%
+진행률: 98%
 
 ## 완료
 
@@ -44,18 +44,19 @@
 - Supabase Storage `work-files` bucket migration 초안 추가
 - 업무 상세 첨부파일 목록/업로드/다운로드 API 및 UI 추가
 - 통합검색 대상에 첨부 파일명 추가
+- 업무 삭제 대신 `archived_at` 기반 보관 처리 API/UI 추가
+- Supabase 업무 목록 조회에 상태/유형/담당자 필터 반영
 
 ## 진행 중
 
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
-- 업무 CRUD 완성
 - 검색 결과 상세 링크 정리
 
 ## 남은 작업
 
 - Supabase profile/audit log/storage RLS 추가 migration 운영 DB 적용
-- 프로젝트/업무 생성, 수정, 상태 변경, 삭제
+- 프로젝트/업무 담당자 배정과 보관 업무 복구
 - 검색 결과 타입별 상세 UX 정리
 - ERP 연동 실제 인증/동기화
 - 외부 공개 POC 배포
@@ -75,12 +76,12 @@
 
 ### M2. 업무 CRUD 완성
 
-상태: 진행 중
+상태: 코드 1차 완료
 
 - 업무 상세 조회를 Supabase 우선으로 전환
 - 업무 제목, 유형, 납기 수정 API/UI 추가
 - 담당자 배정은 `profiles` 검색/선택 UX와 함께 추가
-- 업무 삭제 또는 보관 정책 결정 후 API 추가
+- 업무 삭제 대신 보관 정책 적용 및 API/UI 추가
 - mock fallback과 로그인 사용자 DB 저장 흐름 유지
 
 ### M3. 댓글/활동 로그 실제 DB 연결

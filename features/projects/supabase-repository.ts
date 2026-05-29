@@ -1,5 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import type { ProjectSummary, TaskSummary } from "@/types/domain";
+import type { ProjectSummary, TaskStatus, TaskSummary, TaskType } from "@/types/domain";
+
+type TaskFilters = {
+  status?: TaskStatus;
+  type?: TaskType;
+  assignee?: string;
+};
 
 type ProjectRow = {
   id: string;
@@ -104,7 +110,7 @@ export async function findProjectByCodeFromSupabase(code: string) {
   return projects.find((project) => project.code.toLowerCase() === code.toLowerCase()) ?? null;
 }
 
-export async function listTasksFromSupabase() {
+export async function listTasksFromSupabase(filters: TaskFilters = {}) {
   const supabase = await createClient();
 
   if (!supabase) {
@@ -117,16 +123,26 @@ export async function listTasksFromSupabase() {
     return null;
   }
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("tasks")
     .select("id, title, body, type, status, due_date, projects(code), customers(name), task_comments(id), task_files(document_id)")
-    .order("updated_at", { ascending: false });
+    .is("archived_at", null);
+
+  if (filters.status) {
+    query = query.eq("status", filters.status);
+  }
+
+  if (filters.type) {
+    query = query.eq("type", filters.type);
+  }
+
+  const { data, error } = await query.order("updated_at", { ascending: false });
 
   if (error || !data) {
     return null;
   }
 
-  return (data as unknown as TaskRow[]).map<TaskSummary>((task, index) => {
+  const tasks = (data as unknown as TaskRow[]).map<TaskSummary>((task, index) => {
     const project = firstRelation(task.projects);
     const customer = firstRelation(task.customers);
 
@@ -145,6 +161,12 @@ export async function listTasksFromSupabase() {
     isDelayed: isDelayed(task.due_date, task.status)
   };
   });
+
+  if (filters.assignee) {
+    return tasks.filter((task) => task.assignee.includes(filters.assignee ?? ""));
+  }
+
+  return tasks;
 }
 
 export async function getTaskByIdFromSupabase(id: string) {
