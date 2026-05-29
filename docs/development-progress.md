@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 96%
+진행률: 97%
 
 ## 완료
 
@@ -41,20 +41,21 @@
 - 업무 상세 댓글 작성자 Supabase profile join 적용
 - 업무 상세 활동 로그를 Supabase `audit_logs` 조회로 전환
 - 통합검색을 로그인 사용자 기준 Supabase 프로젝트/업무/댓글/고객 검색으로 확장
+- Supabase Storage `work-files` bucket migration 초안 추가
+- 업무 상세 첨부파일 목록/업로드/다운로드 API 및 UI 추가
+- 통합검색 대상에 첨부 파일명 추가
 
 ## 진행 중
 
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
 - 업무 CRUD 완성
-- 첨부파일 업로드/다운로드
 - 검색 결과 상세 링크 정리
 
 ## 남은 작업
 
-- Supabase profile/audit log RLS 추가 migration 운영 DB 적용
+- Supabase profile/audit log/storage RLS 추가 migration 운영 DB 적용
 - 프로젝트/업무 생성, 수정, 상태 변경, 삭제
-- 첨부파일 업로드/다운로드
 - 검색 결과 타입별 상세 UX 정리
 - ERP 연동 실제 인증/동기화
 - 외부 공개 POC 배포
@@ -94,13 +95,13 @@
 
 상태: 코드 1차 완료
 
-- 프로젝트, 업무, 댓글, 고객 검색을 PostgreSQL FTS/trigram으로 연결
+- 프로젝트, 업무, 댓글, 첨부 파일명, 고객 검색을 PostgreSQL FTS/trigram으로 연결
 - 검색 결과 상세 링크와 결과 타입 정리 일부 완료
 - 비로그인 fallback 유지 여부 결정
 
 ### M5. 첨부파일 업로드/다운로드
 
-상태: 대기
+상태: 코드 1차 완료, 운영 Storage migration 적용 대기
 
 - Supabase Storage bucket 정책 정리
 - 업무 첨부 업로드/다운로드 API 추가

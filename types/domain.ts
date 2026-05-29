@@ -52,6 +52,16 @@ export interface TaskSummary {
   isDelayed: boolean;
 }
 
+export interface TaskFileSummary {
+  id: string;
+  title: string;
+  mimeType: string | null;
+  sizeBytes: number | null;
+  uploadedBy: string;
+  createdAt: string;
+  downloadUrl: string;
+}
+
 export type NewTaskInput = {
   title: string;
   projectCode: string;

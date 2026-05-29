@@ -68,6 +68,10 @@ function formatActivityTitle(action: string, payload: Record<string, unknown> | 
     return `${actor}님이 기본 정보를 수정`;
   }
 
+  if (action === "file.uploaded") {
+    return `${actor}님이 첨부파일 ${formatPayloadValue(payload?.title)}을 추가`;
+  }
+
   return `${actor}님이 ${action} 작업 수행`;
 }
 

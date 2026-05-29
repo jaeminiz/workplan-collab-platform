@@ -6,14 +6,17 @@ import type { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TaskBodyEditor } from "@/components/task/task-body-editor";
 import { TaskCommentPanel } from "@/components/task/task-comment-panel";
+import { TaskFilePanel } from "@/components/task/task-file-panel";
 import { TaskMetadataEditor } from "@/components/task/task-metadata-editor";
 import { TaskStatusControl } from "@/components/task/task-status-control";
 import { findProjectByCode } from "@/features/projects/repository";
 import { getTaskById } from "@/features/tasks/repository";
 import { findProjectByCodeFromSupabase, getTaskByIdFromSupabase } from "@/features/projects/supabase-repository";
 import { listMockTaskActivities, listMockTaskComments } from "@/features/tasks/comments";
+import { listMockTaskFiles } from "@/features/tasks/files";
 import { listTaskActivitiesFromSupabase } from "@/features/tasks/supabase-activities";
 import { listTaskCommentsFromSupabase } from "@/features/tasks/supabase-comments";
+import { listTaskFilesFromSupabase } from "@/features/tasks/supabase-files";
 
 type TaskDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -30,6 +33,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const project = (await findProjectByCodeFromSupabase(task.projectCode)) ?? findProjectByCode(task.projectCode);
   const comments = (await listTaskCommentsFromSupabase(task.id)) ?? listMockTaskComments(task.id);
   const activities = (await listTaskActivitiesFromSupabase(task.id)) ?? listMockTaskActivities(task.id);
+  const files = (await listTaskFilesFromSupabase(task.id)) ?? listMockTaskFiles(task.id);
 
   return (
     <div className="space-y-6">
@@ -76,6 +80,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       </section>
 
       <TaskStatusControl taskId={task.id} currentStatus={task.status} />
+
+      <TaskFilePanel taskId={task.id} files={files} />
 
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <TaskCommentPanel taskId={task.id} comments={comments} />

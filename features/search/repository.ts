@@ -1,7 +1,7 @@
 import { inboxItems, projectSummaries, taskSummaries } from "@/features/projects/mock-data";
 import { createClient } from "@/lib/supabase/server";
 
-export type SearchResultType = "project" | "task" | "comment" | "customer" | "inbox";
+export type SearchResultType = "project" | "task" | "comment" | "file" | "customer" | "inbox";
 
 export type SearchResult = {
   id: string;
@@ -107,6 +107,14 @@ type CustomerSearchRow = {
   company_code: string | null;
 };
 
+type DocumentSearchRow = {
+  id: string;
+  title: string;
+  task_id: string | null;
+  projects: { code: string } | { code: string }[] | null;
+  tasks: { title: string } | { title: string }[] | null;
+};
+
 function firstRelation<T>(value: T | T[] | null) {
   return Array.isArray(value) ? (value[0] ?? null) : value;
 }
@@ -132,18 +140,19 @@ export async function searchWorkspaceFromSupabase(query: string) {
 
   const client = supabase;
 
-  const [projects, tasks, comments, customers] = await Promise.all([
+  const [projects, tasks, comments, documents, customers] = await Promise.all([
     searchProjects(normalizedQuery),
     searchTasks(normalizedQuery),
     searchComments(normalizedQuery),
+    searchDocuments(normalizedQuery),
     searchCustomers(normalizedQuery)
   ]);
 
-  if (!projects || !tasks || !comments || !customers) {
+  if (!projects || !tasks || !comments || !documents || !customers) {
     return null;
   }
 
-  return [...projects, ...tasks, ...comments, ...customers];
+  return [...projects, ...tasks, ...comments, ...documents, ...customers];
 
   async function searchProjects(searchQuery: string) {
     const { data, error } = await client
@@ -238,5 +247,30 @@ export async function searchWorkspaceFromSupabase(query: string) {
       subtitle: customer.company_code ? `고객 코드 ${customer.company_code}` : "고객",
       url: "/customers"
     }));
+  }
+
+  async function searchDocuments(searchQuery: string) {
+    const { data, error } = await client
+      .from("documents")
+      .select("id, title, task_id, projects(code), tasks(title)")
+      .textSearch("search_vector", searchQuery, { config: "simple", type: "websearch" })
+      .limit(10);
+
+    if (error || !data) {
+      return null;
+    }
+
+    return (data as unknown as DocumentSearchRow[]).map<SearchResult>((document) => {
+      const project = firstRelation(document.projects);
+      const task = firstRelation(document.tasks);
+
+      return {
+        id: document.id,
+        type: "file",
+        title: document.title,
+        subtitle: `${task?.title ?? "업무 첨부"} · ${project?.code ?? "미지정"}`,
+        url: document.task_id ? `/tasks/${document.task_id}` : "/documents"
+      };
+    });
   }
 }

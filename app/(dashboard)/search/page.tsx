@@ -16,8 +16,8 @@ export default function SearchPage() {
           <CardTitle>검색 확장 계획</CardTitle>
         </CardHeader>
         <CardContent className="rounded-md border border-dashed border-stone-300 bg-stone-50 p-6 text-sm text-stone-500">
-          로그인 사용자는 Supabase의 프로젝트, 업무 본문, 댓글, 고객 검색을 우선 사용합니다. 첨부 파일명,
-          메일, ERP 동기화 데이터는 다음 단계에서 같은 결과 계약으로 확장합니다.
+          로그인 사용자는 Supabase의 프로젝트, 업무 본문, 댓글, 첨부 파일명, 고객 검색을 우선 사용합니다.
+          메일과 ERP 동기화 데이터는 다음 단계에서 같은 결과 계약으로 확장합니다.
         </CardContent>
       </Card>
     </div>
