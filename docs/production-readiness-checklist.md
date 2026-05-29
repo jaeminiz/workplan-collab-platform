@@ -105,6 +105,14 @@ https://workplan-collab-platform.vercel.app/search
 .\scripts\smoke-test.ps1
 ```
 
+현재 Google Provider가 꺼져 있으면 smoke test는 다음 오류를 보고한다.
+
+```text
+Unsupported provider: provider is not enabled
+```
+
+이 경우 Supabase Dashboard에서 `Authentication > Providers > Google`을 활성화한 뒤 다시 실행한다.
+
 Preview 또는 다른 URL 확인:
 
 ```powershell

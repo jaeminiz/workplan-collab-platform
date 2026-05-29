@@ -61,6 +61,18 @@ Google Client Secret은 GitHub나 문서에 저장하지 않습니다.
 3. Supabase callback 이후 `/dashboard` 이동 확인
 4. Supabase SQL Editor에서 profile 생성 확인
 
+자동 검증:
+
+```powershell
+.\scripts\smoke-test.ps1
+```
+
+Provider가 꺼져 있으면 Supabase가 다음 오류를 반환한다.
+
+```text
+Unsupported provider: provider is not enabled
+```
+
 ```sql
 select id, email, display_name, created_at
 from public.profiles

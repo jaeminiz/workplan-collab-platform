@@ -59,6 +59,7 @@
 
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
+- 공개 POC smoke test에서 Google Provider 비활성화 차단 확인
 
 ## 남은 작업
 

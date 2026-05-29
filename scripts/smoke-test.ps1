@@ -62,6 +62,27 @@ try {
 
 Write-Host ""
 
+if ($AllowUnconfiguredSupabase) {
+  Write-Host "[SKIP] Google OAuth provider redirect"
+} else {
+  try {
+    Invoke-WebRequest -Uri "$BaseUrl/auth/sign-in" -MaximumRedirection 5 -UseBasicParsing | Out-Null
+    Write-Host "[OK]   Google OAuth provider redirect"
+  } catch {
+    $message = $_.ErrorDetails.Message
+
+    if (-not $message) {
+      $message = $_.Exception.Message
+    }
+
+    Write-Host "[FAIL] Google OAuth provider redirect"
+    Write-Host "       $message"
+    $failures += "Google OAuth provider redirect failed"
+  }
+}
+
+Write-Host ""
+
 if ($failures.Count -gt 0) {
   Write-Host "Smoke test failed:"
   $failures | ForEach-Object { Write-Host "  - $_" }
