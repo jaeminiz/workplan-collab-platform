@@ -1,8 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAllowedWorkspaceDomain, googleOAuthScopes } from "@/lib/auth/google";
 import { hasSupabaseEnv } from "@/lib/supabase/client";
 
 export default function SettingsPage() {
   const isSupabaseConfigured = hasSupabaseEnv();
+  const workspaceDomain = getAllowedWorkspaceDomain();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "미설정";
 
   return (
     <div className="space-y-6">
@@ -19,6 +22,15 @@ export default function SettingsPage() {
         <CardContent className="space-y-3 text-sm text-stone-600">
           <div className="rounded-md border border-stone-200 bg-stone-50 p-3">
             Supabase: {isSupabaseConfigured ? "환경변수 설정됨" : "환경변수 미설정"}
+          </div>
+          <div className="rounded-md border border-stone-200 bg-stone-50 p-3">
+            앱 URL: {appUrl}
+          </div>
+          <div className="rounded-md border border-stone-200 bg-stone-50 p-3">
+            Google Workspace 도메인: {workspaceDomain ?? "미설정"} · OAuth scope {googleOAuthScopes.length}개
+          </div>
+          <div className="rounded-md border border-stone-200 bg-stone-50 p-3">
+            운영 DB 적용 필요 migration: 0002, 0003, 0004
           </div>
           <div className="rounded-md border border-stone-200 bg-stone-50 p-3">
             외부 연동: 초기 PR에서는 DB/API 구조와 문서만 준비

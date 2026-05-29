@@ -50,6 +50,8 @@
 - 보관 업무 목록 화면과 복구 API/UI 추가
 - Supabase profile 기반 담당자 목록 API 추가
 - 업무 상세 담당자 배정 UI와 Supabase `assignee_id` 저장 API 추가
+- 운영 적용용 production readiness 체크리스트 문서 추가
+- 설정 화면과 health API에 OAuth, migration, 앱 URL 점검 정보 추가
 
 ## 진행 중
 

@@ -8,6 +8,8 @@
 - `GET /auth/callback`
 - `POST /auth/sign-out`
 
+로그인 성공 후에는 `profiles` row를 자동 생성/갱신하고, `GOOGLE_WORKSPACE_DOMAIN`이 설정된 경우 해당 도메인의 계정만 허용합니다.
+
 ## 사용자가 해야 하는 콘솔 작업
 
 ### 1. Google Cloud OAuth Client 생성
@@ -51,3 +53,17 @@ http://127.0.0.1:3002/auth/callback
 ## 주의
 
 Google Client Secret은 GitHub나 문서에 저장하지 않습니다.
+
+## 검증
+
+1. `/login` 접속
+2. Google 계정으로 계속 클릭
+3. Supabase callback 이후 `/dashboard` 이동 확인
+4. Supabase SQL Editor에서 profile 생성 확인
+
+```sql
+select id, email, display_name, created_at
+from public.profiles
+order by created_at desc
+limit 5;
+```

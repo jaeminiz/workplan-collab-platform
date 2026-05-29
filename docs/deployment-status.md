@@ -50,8 +50,14 @@ task_comments: 2
 
 ## 다음 작업
 
-1. Google OAuth provider 설정
-2. Seed 데이터 입력
-3. mock repository를 Supabase repository로 교체
-4. 업무 생성 dry-run을 실제 insert로 전환
-5. 검색을 PostgreSQL Full Text Search로 연결
+1. `0002_auth_session_profiles.sql` 운영 DB 적용
+2. `0003_storage_work_files.sql` 운영 DB 적용
+3. `0004_task_archive.sql` 운영 DB 적용
+4. Google OAuth provider 설정
+5. 공개 POC smoke test
+
+상세 절차:
+
+```text
+docs/production-readiness-checklist.md
+```
