@@ -45,6 +45,7 @@ export interface TaskSummary {
   customer: string;
   type: TaskType;
   status: TaskStatus;
+  assigneeId?: string;
   assignee: string;
   dueDate: string;
   comments: number;

@@ -4,6 +4,7 @@ import { ArrowLeft, CalendarDays, FileText, MessageSquare, UserRound } from "luc
 import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { TaskAssigneeControl } from "@/components/task/task-assignee-control";
 import { TaskArchiveControl } from "@/components/task/task-archive-control";
 import { TaskBodyEditor } from "@/components/task/task-body-editor";
 import { TaskCommentPanel } from "@/components/task/task-comment-panel";
@@ -11,6 +12,7 @@ import { TaskFilePanel } from "@/components/task/task-file-panel";
 import { TaskMetadataEditor } from "@/components/task/task-metadata-editor";
 import { TaskStatusControl } from "@/components/task/task-status-control";
 import { findProjectByCode } from "@/features/projects/repository";
+import { listProfilesFromSupabase } from "@/features/auth/profiles";
 import { getTaskById } from "@/features/tasks/repository";
 import { findProjectByCodeFromSupabase, getTaskByIdFromSupabase } from "@/features/projects/supabase-repository";
 import { listMockTaskActivities, listMockTaskComments } from "@/features/tasks/comments";
@@ -35,6 +37,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const comments = (await listTaskCommentsFromSupabase(task.id)) ?? listMockTaskComments(task.id);
   const activities = (await listTaskActivitiesFromSupabase(task.id)) ?? listMockTaskActivities(task.id);
   const files = (await listTaskFilesFromSupabase(task.id)) ?? listMockTaskFiles(task.id);
+  const profiles = (await listProfilesFromSupabase()) ?? [];
 
   return (
     <div className="space-y-6">
@@ -63,6 +66,8 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       </div>
 
       <TaskMetadataEditor task={task} />
+
+      <TaskAssigneeControl taskId={task.id} currentAssigneeId={task.assigneeId} profiles={profiles} />
 
       <TaskBodyEditor taskId={task.id} initialBody={task.body} />
 

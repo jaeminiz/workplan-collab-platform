@@ -27,6 +27,8 @@ type TaskRow = {
   status: TaskSummary["status"];
   due_date: string | null;
   archived_at?: string | null;
+  assignee_id: string | null;
+  assignee_profile: { display_name: string } | { display_name: string }[] | null;
   projects: { code: string } | { code: string }[] | null;
   customers: { name: string } | { name: string }[] | null;
   task_comments: { id: string }[];
@@ -130,7 +132,7 @@ export async function listTasksFromSupabase(filters: TaskFilters = {}) {
 
   let query = supabase
     .from("tasks")
-    .select("id, title, body, type, status, due_date, projects(code), customers(name), task_comments(id), task_files(document_id)")
+    .select("id, title, body, type, status, due_date, assignee_id, assignee_profile:profiles!tasks_assignee_id_fkey(display_name), projects(code), customers(name), task_comments(id), task_files(document_id)")
     .is("archived_at", null);
 
   if (filters.status) {
@@ -183,7 +185,7 @@ export async function listArchivedTasksFromSupabase() {
 
   const { data, error } = await supabase
     .from("tasks")
-    .select("id, title, body, type, status, due_date, archived_at, projects(code), customers(name), task_comments(id), task_files(document_id)")
+    .select("id, title, body, type, status, due_date, archived_at, assignee_id, assignee_profile:profiles!tasks_assignee_id_fkey(display_name), projects(code), customers(name), task_comments(id), task_files(document_id)")
     .not("archived_at", "is", null)
     .order("archived_at", { ascending: false });
 
@@ -200,6 +202,7 @@ export async function listArchivedTasksFromSupabase() {
 function mapTaskRow(task: TaskRow, index: number): TaskSummary {
   const project = firstRelation(task.projects);
   const customer = firstRelation(task.customers);
+  const assignee = firstRelation(task.assignee_profile);
 
   return {
     id: task.id,
@@ -209,7 +212,8 @@ function mapTaskRow(task: TaskRow, index: number): TaskSummary {
     customer: customer?.name ?? "미지정 고객",
     type: task.type,
     status: task.status,
-    assignee: `담당자 ${String.fromCharCode(65 + index)}`,
+    assigneeId: task.assignee_id ?? undefined,
+    assignee: assignee?.display_name ?? `담당자 ${String.fromCharCode(65 + index)}`,
     dueDate: task.due_date ?? "-",
     comments: task.task_comments.length,
     files: task.task_files.length,

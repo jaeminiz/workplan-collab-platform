@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   archiveTaskInSupabase,
+  updateTaskAssigneeInSupabase,
   updateTaskBodyInSupabase,
   updateTaskMetadataInSupabase,
   updateTaskStatusInSupabase
@@ -67,6 +68,18 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
         });
       }
     }
+
+    if (parsedPayload.data.assigneeId !== undefined) {
+      const updatedTask = await updateTaskAssigneeInSupabase(id, parsedPayload.data.assigneeId);
+
+      if (updatedTask) {
+        return NextResponse.json({
+          mode: "supabase",
+          data: updatedTask,
+          message: "업무 담당자가 Supabase에 저장되었습니다."
+        });
+      }
+    }
   } catch {
     return NextResponse.json(
       {
@@ -87,7 +100,9 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
       ? "로그인 전이므로 업무 내용은 저장하지 않고 입력 흐름만 검증했습니다."
       : parsedPayload.data.title || parsedPayload.data.type || parsedPayload.data.dueDate
         ? "로그인 전이므로 업무 기본 정보는 저장하지 않고 입력 흐름만 검증했습니다."
-        : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
+        : parsedPayload.data.assigneeId !== undefined
+          ? "로그인 전이므로 담당자는 저장하지 않고 입력 흐름만 검증했습니다."
+          : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
   });
 }
 

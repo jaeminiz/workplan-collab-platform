@@ -296,6 +296,59 @@ export async function updateTaskMetadataInSupabase(taskId: string, input: Update
   };
 }
 
+export async function updateTaskAssigneeInSupabase(taskId: string, assigneeId: string | null) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const updatedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      assignee_id: assigneeId,
+      updated_at: updatedAt
+    })
+    .eq("id", taskId)
+    .select("id, assignee_id")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task assignee update failed");
+  }
+
+  if (assigneeId) {
+    await supabase.from("task_assignees").upsert(
+      {
+        task_id: taskId,
+        profile_id: assigneeId,
+        role: "assignee"
+      },
+      { onConflict: "task_id,profile_id" }
+    );
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "assignee.updated",
+    payload: { assignee_id: assigneeId }
+  });
+
+  return {
+    id: data.id as string,
+    assigneeId: data.assignee_id as string | null
+  };
+}
+
 export async function createTaskCommentInSupabase(taskId: string, input: CreateTaskCommentInput) {
   const supabase = await createClient();
 

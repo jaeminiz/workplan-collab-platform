@@ -48,6 +48,8 @@
 - Supabase 업무 목록 조회에 상태/유형/담당자 필터 반영
 - 검색 결과 타입별 한글 라벨, 아이콘, 출처 표시 UX 정리
 - 보관 업무 목록 화면과 복구 API/UI 추가
+- Supabase profile 기반 담당자 목록 API 추가
+- 업무 상세 담당자 배정 UI와 Supabase `assignee_id` 저장 API 추가
 
 ## 진행 중
 
@@ -57,7 +59,6 @@
 ## 남은 작업
 
 - Supabase profile/audit log/storage RLS 추가 migration 운영 DB 적용
-- 프로젝트/업무 담당자 배정
 - ERP 연동 실제 인증/동기화
 - 외부 공개 POC 배포
 - 모바일 대응 강화
@@ -80,7 +81,7 @@
 
 - 업무 상세 조회를 Supabase 우선으로 전환
 - 업무 제목, 유형, 납기 수정 API/UI 추가
-- 담당자 배정은 `profiles` 검색/선택 UX와 함께 추가
+- 담당자 배정은 `profiles` 선택 UX와 함께 추가
 - 업무 삭제 대신 보관 정책 적용 및 API/UI 추가
 - 보관 업무 목록과 복구 API/UI 추가
 - mock fallback과 로그인 사용자 DB 저장 흐름 유지
