@@ -76,6 +76,10 @@ function formatActivityTitle(action: string, payload: Record<string, unknown> | 
     return `${actor}님이 업무를 보관 처리`;
   }
 
+  if (action === "task.restored") {
+    return `${actor}님이 보관 업무를 복구`;
+  }
+
   return `${actor}님이 ${action} 작업 수행`;
 }
 

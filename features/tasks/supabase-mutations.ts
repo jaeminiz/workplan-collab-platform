@@ -383,6 +383,50 @@ export async function archiveTaskInSupabase(taskId: string) {
   };
 }
 
+export async function restoreTaskInSupabase(taskId: string) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const updatedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      archived_at: null,
+      archived_by: null,
+      updated_at: updatedAt
+    })
+    .eq("id", taskId)
+    .not("archived_at", "is", null)
+    .select("id")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task restore failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "task.restored",
+    payload: { restored_at: updatedAt }
+  });
+
+  return {
+    id: data.id as string,
+    restoredAt: updatedAt
+  };
+}
+
 function isDelayed(dueDate: string | null, status: string) {
   return Boolean(dueDate && status !== "완료확인" && new Date(dueDate) < new Date());
 }

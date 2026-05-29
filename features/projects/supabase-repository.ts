@@ -26,10 +26,15 @@ type TaskRow = {
   type: TaskSummary["type"];
   status: TaskSummary["status"];
   due_date: string | null;
+  archived_at?: string | null;
   projects: { code: string } | { code: string }[] | null;
   customers: { name: string } | { name: string }[] | null;
   task_comments: { id: string }[];
   task_files: { document_id: string }[];
+};
+
+export type ArchivedTaskSummary = TaskSummary & {
+  archivedAt: string;
 };
 
 function formatDateTime(value: string) {
@@ -142,25 +147,9 @@ export async function listTasksFromSupabase(filters: TaskFilters = {}) {
     return null;
   }
 
-  const tasks = (data as unknown as TaskRow[]).map<TaskSummary>((task, index) => {
-    const project = firstRelation(task.projects);
-    const customer = firstRelation(task.customers);
-
-    return {
-    id: task.id,
-    title: task.title,
-    body: task.body ?? undefined,
-    projectCode: project?.code ?? "미지정",
-    customer: customer?.name ?? "미지정 고객",
-    type: task.type,
-    status: task.status,
-    assignee: `담당자 ${String.fromCharCode(65 + index)}`,
-    dueDate: task.due_date ?? "-",
-    comments: task.task_comments.length,
-    files: task.task_files.length,
-    isDelayed: isDelayed(task.due_date, task.status)
-  };
-  });
+  const tasks = (data as unknown as TaskRow[]).map<TaskSummary>((task, index) =>
+    mapTaskRow(task, index)
+  );
 
   if (filters.assignee) {
     return tasks.filter((task) => task.assignee.includes(filters.assignee ?? ""));
@@ -177,4 +166,53 @@ export async function getTaskByIdFromSupabase(id: string) {
   }
 
   return tasks.find((task) => task.id === id) ?? null;
+}
+
+export async function listArchivedTasksFromSupabase() {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("id, title, body, type, status, due_date, archived_at, projects(code), customers(name), task_comments(id), task_files(document_id)")
+    .not("archived_at", "is", null)
+    .order("archived_at", { ascending: false });
+
+  if (error || !data) {
+    return null;
+  }
+
+  return (data as unknown as TaskRow[]).map<ArchivedTaskSummary>((task, index) => ({
+    ...mapTaskRow(task, index),
+    archivedAt: task.archived_at ? formatDateTime(task.archived_at) : "-"
+  }));
+}
+
+function mapTaskRow(task: TaskRow, index: number): TaskSummary {
+  const project = firstRelation(task.projects);
+  const customer = firstRelation(task.customers);
+
+  return {
+    id: task.id,
+    title: task.title,
+    body: task.body ?? undefined,
+    projectCode: project?.code ?? "미지정",
+    customer: customer?.name ?? "미지정 고객",
+    type: task.type,
+    status: task.status,
+    assignee: `담당자 ${String.fromCharCode(65 + index)}`,
+    dueDate: task.due_date ?? "-",
+    comments: task.task_comments.length,
+    files: task.task_files.length,
+    isDelayed: isDelayed(task.due_date, task.status)
+  };
 }
