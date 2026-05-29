@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { getAllowedWorkspaceDomain, googleOAuthScopes } from "@/lib/auth/google";
 import { hasSupabaseEnv } from "@/lib/supabase/client";
 
+export const dynamic = "force-dynamic";
+
 export function GET(request: Request) {
   const supabaseConfigured = hasSupabaseEnv();
   const workspaceDomain = getAllowedWorkspaceDomain();
