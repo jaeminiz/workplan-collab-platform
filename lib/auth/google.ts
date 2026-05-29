@@ -10,3 +10,13 @@ export const googleOAuthScopes = [
 export function getAllowedWorkspaceDomain() {
   return process.env.GOOGLE_WORKSPACE_DOMAIN || null;
 }
+
+export function isAllowedWorkspaceEmail(email: string) {
+  const domain = getAllowedWorkspaceDomain();
+
+  if (!domain) {
+    return true;
+  }
+
+  return email.toLowerCase().endsWith(`@${domain.toLowerCase()}`);
+}

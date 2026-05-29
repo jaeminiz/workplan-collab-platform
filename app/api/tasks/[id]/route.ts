@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { updateTaskBodyInSupabase, updateTaskStatusInSupabase } from "@/features/tasks/supabase-mutations";
+import {
+  updateTaskBodyInSupabase,
+  updateTaskMetadataInSupabase,
+  updateTaskStatusInSupabase
+} from "@/features/tasks/supabase-mutations";
 import { updateTaskSchema } from "@/features/tasks/validators";
 
 type TaskRouteContext = {
@@ -46,11 +50,27 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
         });
       }
     }
+
+    if (parsedPayload.data.title || parsedPayload.data.type || parsedPayload.data.dueDate) {
+      const updatedTask = await updateTaskMetadataInSupabase(id, {
+        title: parsedPayload.data.title,
+        type: parsedPayload.data.type,
+        dueDate: parsedPayload.data.dueDate
+      });
+
+      if (updatedTask) {
+        return NextResponse.json({
+          mode: "supabase",
+          data: updatedTask,
+          message: "업무 기본 정보가 Supabase에 저장되었습니다."
+        });
+      }
+    }
   } catch {
     return NextResponse.json(
       {
-        error: "Task status update failed",
-        message: "업무 상태 저장에 실패했습니다. DB 권한과 로그인 세션을 확인하세요."
+        error: "Task update failed",
+        message: "업무 저장에 실패했습니다. DB 권한과 로그인 세션을 확인하세요."
       },
       { status: 500 }
     );
@@ -64,6 +84,8 @@ export async function PATCH(request: Request, context: TaskRouteContext) {
     },
     message: parsedPayload.data.body
       ? "로그인 전이므로 업무 내용은 저장하지 않고 입력 흐름만 검증했습니다."
-      : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
+      : parsedPayload.data.title || parsedPayload.data.type || parsedPayload.data.dueDate
+        ? "로그인 전이므로 업무 기본 정보는 저장하지 않고 입력 흐름만 검증했습니다."
+        : "로그인 전이므로 상태 변경은 화면 검증만 수행했습니다."
   });
 }

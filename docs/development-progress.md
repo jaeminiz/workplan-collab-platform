@@ -2,7 +2,7 @@
 
 ## 현재 진행률
 
-진행률: 92%
+진행률: 94%
 
 ## 완료
 
@@ -33,26 +33,84 @@
 - ERP 연동 확장 API 초안
 - AWS/국내 호스팅 마이그레이션 전략 문서
 - Notion 스타일을 참고한 조용한 워크스페이스 UI 개선 및 브라우저 렌더링 확인
+- Supabase SSR middleware 세션 갱신 추가
+- 로그인 성공 후 프로필 upsert 및 Workspace 도메인 검증 흐름 추가
+- 대시보드 상단 로그인/로그아웃 상태 표시
+- 통합 상태 API의 Supabase 설정값 boolean 응답 수정
+- 업무 상세에서 업무명, 유형, 납기 수정 UI/API 추가
 
 ## 진행 중
 
 - Supabase 콘솔 Google OAuth Provider 활성화
 - Google Cloud OAuth Client 생성
-- 업무 CRUD
+- 업무 CRUD 완성
 - 첨부파일 업로드/다운로드
 - 실제 활동 로그 DB 조회
 - 검색 결과 상세 링크 정리
 
 ## 남은 작업
 
-- 로그인/세션 처리
-- 프로젝트/업무 생성, 수정, 상태 변경
-- 댓글/첨부파일
+- Supabase profile/audit log RLS 추가 migration 운영 DB 적용
+- 프로젝트/업무 생성, 수정, 상태 변경, 삭제
+- 댓글 실제 DB 조회와 첨부파일
 - 통합검색 실제 DB 연결
 - ERP 연동 실제 인증/동기화
 - 외부 공개 POC 배포
 - 모바일 대응 강화
 - 배포 사이트 공개
+
+## 다음 개발 마일스톤
+
+### M1. 인증/세션 기반 정리
+
+상태: 코드 1차 완료, 운영 DB migration 적용 대기
+
+- Supabase SSR middleware로 쿠키 세션 갱신
+- Google OAuth callback 이후 `profiles` 자동 생성/갱신
+- `GOOGLE_WORKSPACE_DOMAIN` 기반 회사 계정 제한
+- 대시보드 상단 로그인 사용자/로그아웃 표시
+
+### M2. 업무 CRUD 완성
+
+상태: 진행 중
+
+- 업무 상세 조회를 Supabase 우선으로 전환
+- 업무 제목, 유형, 납기 수정 API/UI 추가
+- 담당자 배정은 `profiles` 검색/선택 UX와 함께 추가
+- 업무 삭제 또는 보관 정책 결정 후 API 추가
+- mock fallback과 로그인 사용자 DB 저장 흐름 유지
+
+### M3. 댓글/활동 로그 실제 DB 연결
+
+상태: 대기
+
+- 댓글 목록을 `task_comments` DB 조회로 전환
+- 상태/본문/댓글 변경 이력을 `audit_logs`에서 조회
+- 업무 상세 화면의 활동 로그 mock 제거
+
+### M4. 통합검색 DB 연결
+
+상태: 대기
+
+- 프로젝트, 업무, 댓글, 고객 검색을 PostgreSQL FTS/trigram으로 연결
+- 검색 결과 상세 링크와 결과 타입 정리
+- 비로그인 fallback 유지 여부 결정
+
+### M5. 첨부파일 업로드/다운로드
+
+상태: 대기
+
+- Supabase Storage bucket 정책 정리
+- 업무 첨부 업로드/다운로드 API 추가
+- 문서/파일 화면과 업무 상세 첨부 영역 연결
+
+### M6. 공개 POC 안정화와 외부 연동
+
+상태: 대기
+
+- Vercel Production 환경에서 OAuth end-to-end 검증
+- ERP/Gmail/Gemini/알림 연동의 실제 인증 방식 확정
+- 모바일 대응과 배포 공개 체크리스트 완료
 
 ## POC 확인 방법
 

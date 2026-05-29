@@ -16,6 +16,7 @@ import {
   Users
 } from "lucide-react";
 
+import type { AuthUserSummary } from "@/lib/auth/session";
 import { cn } from "@/lib/utils/cn";
 
 const navigation: { href: Route; label: string; icon: LucideIcon }[] = [
@@ -29,7 +30,15 @@ const navigation: { href: Route; label: string; icon: LucideIcon }[] = [
   { href: "/settings", label: "설정", icon: Settings }
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  user
+}: {
+  children: ReactNode;
+  user: AuthUserSummary | null;
+}) {
+  const initials = user?.displayName.slice(0, 2).toUpperCase();
+
   return (
     <div className="min-h-screen bg-white text-stone-900">
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-stone-200 bg-[#f7f7f5] lg:block">
@@ -87,12 +96,32 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Search className="h-4 w-4" />
             검색
           </Link>
-          <Link
-            href="/login"
-            className="rounded-md border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"
-          >
-            Google 로그인
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <div className="hidden text-right sm:block">
+                <p className="text-xs font-medium text-stone-900">{user.displayName}</p>
+                <p className="text-[11px] text-stone-500">{user.email}</p>
+              </div>
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-stone-900 text-xs font-semibold text-white">
+                {initials}
+              </div>
+              <form action="/auth/sign-out" method="post">
+                <button
+                  type="submit"
+                  className="rounded-md border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"
+                >
+                  로그아웃
+                </button>
+              </form>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-md border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"
+            >
+              Google 로그인
+            </Link>
+          )}
         </header>
         <main className="mx-auto max-w-6xl px-5 py-8 lg:px-10">{children}</main>
       </div>

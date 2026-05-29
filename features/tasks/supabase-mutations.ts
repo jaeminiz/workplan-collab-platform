@@ -1,7 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import type { TaskSummary } from "@/types/domain";
 
-import type { CreateTaskCommentInput, CreateTaskInput, UpdateTaskBodyInput, UpdateTaskStatusInput } from "./validators";
+import type {
+  CreateTaskCommentInput,
+  CreateTaskInput,
+  UpdateTaskBodyInput,
+  UpdateTaskMetadataInput,
+  UpdateTaskStatusInput
+} from "./validators";
 
 type CustomerRecord = {
   id: string;
@@ -222,6 +228,71 @@ export async function updateTaskBodyInSupabase(taskId: string, input: UpdateTask
   return {
     id: data.id as string,
     body: data.body as string
+  };
+}
+
+export async function updateTaskMetadataInSupabase(taskId: string, input: UpdateTaskMetadataInput) {
+  const supabase = await createClient();
+
+  if (!supabase) {
+    return null;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData.user) {
+    return null;
+  }
+
+  const updates: {
+    title?: string;
+    type?: TaskSummary["type"];
+    due_date?: string;
+    updated_at: string;
+  } = {
+    updated_at: new Date().toISOString()
+  };
+
+  if (input.title) {
+    updates.title = input.title;
+  }
+
+  if (input.type) {
+    updates.type = input.type;
+  }
+
+  if (input.dueDate) {
+    updates.due_date = input.dueDate;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update(updates)
+    .eq("id", taskId)
+    .select("id, title, type, due_date")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Task metadata update failed");
+  }
+
+  await supabase.from("audit_logs").insert({
+    actor_id: userData.user.id,
+    entity_type: "task",
+    entity_id: taskId,
+    action: "metadata.updated",
+    payload: {
+      title: input.title,
+      type: input.type,
+      due_date: input.dueDate
+    }
+  });
+
+  return {
+    id: data.id as string,
+    title: data.title as string,
+    type: data.type as TaskSummary["type"],
+    dueDate: (data.due_date as string | null) ?? "-"
   };
 }
 

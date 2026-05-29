@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { ensureProfileForUser } from "@/features/auth/profiles";
+import { isAllowedWorkspaceEmail } from "@/lib/auth/google";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -22,6 +24,23 @@ export async function GET(request: Request) {
 
   if (error) {
     return NextResponse.redirect(`${origin}/login?error=session_exchange_failed`);
+  }
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !userData.user?.email) {
+    return NextResponse.redirect(`${origin}/login?error=user_lookup_failed`);
+  }
+
+  if (!isAllowedWorkspaceEmail(userData.user.email)) {
+    await supabase.auth.signOut();
+    return NextResponse.redirect(`${origin}/login?error=unauthorized_domain`);
+  }
+
+  try {
+    await ensureProfileForUser(supabase, userData.user);
+  } catch {
+    return NextResponse.redirect(`${origin}/login?error=profile_setup_failed`);
   }
 
   return NextResponse.redirect(`${origin}${next}`);
